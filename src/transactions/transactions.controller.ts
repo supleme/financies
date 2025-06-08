@@ -41,8 +41,6 @@ export class TransactionsController {
     return this.transactionsService.findAll(type);
   }
 
-  // ROTAS FIXAS / ESPECÍFICAS VEM PRIMEIRO!
-
   @Get('summary')
   getSummary() {
     return this.transactionsService.getSummary();
@@ -80,8 +78,6 @@ export class TransactionsController {
       'Erro lançado por uma exceção customizada',
     );
   }
-
-  // ROTA DINÂMICA VEM POR ÚLTIMO PARA NÃO SOBRESCREVER AS OUTRAS
 
   @Get(':id')
   findOne(@Param('id') id: string): Transaction {
