@@ -28,9 +28,15 @@ model Transaction {
   updatedAt   DateTime        @updatedAt
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id       Int    @id @default(autoincrement())
   email    String @unique
   password String
   name     String?
+  role      Role     @default(USER) // Adicione esta linha
 }
