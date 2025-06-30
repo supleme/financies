@@ -8,17 +8,21 @@ generator client {
   provider = "prisma-client-js"
 }
 
+<<<<<<< HEAD
 generator erd {
   provider = "prisma-erd-generator"
   output   = "./ERD.svg"
 }
 
+=======
+>>>>>>> 80eb1ace50e8f84c878ea8484ab5a1f853f94c07
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Transaction {
+<<<<<<< HEAD
   id          Int             @id @default(autoincrement())
   description String
   amount      Float
@@ -39,4 +43,16 @@ model User {
   password String
   name     String?
   role      Role     @default(USER) // Adicione esta linha
+=======
+  id          Int   @id @default(autoincrement())
+  title       String
+  amount      Decimal
+  type        TransactionType
+  createdAt   DateTime @default(now())
+}
+
+enum TransactionType {
+  income
+  expense
+>>>>>>> 80eb1ace50e8f84c878ea8484ab5a1f853f94c07
 }

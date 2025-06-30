@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Controller, Get, Post, Put, Patch, Delete, Param, Body, HttpCode, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { Transaction } from '@prisma/client';
@@ -5,6 +6,34 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+=======
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  HttpCode,
+  Query,
+  UseInterceptors,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+
+import { TransactionsService } from './transactions.service';
+import { Transaction } from './transaction.model';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+
+import { ResponseInterceptor } from 'src/response/response.interceptor';
+import { CustomException } from 'src/custom-exception/custom-exception';
+>>>>>>> 80eb1ace50e8f84c878ea8484ab5a1f853f94c07
 
 // DTO para criação (simplificado)
 class CreateTransactionDto {
@@ -25,16 +54,21 @@ class UpdateTransactionDto {
 @ApiTags('Transactions')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('transactions')
+@UseInterceptors(ResponseInterceptor)
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
   @HttpCode(201)
+<<<<<<< HEAD
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Cria uma nova transação (Apenas ADMIN)' })
   @ApiResponse({ status: 201, description: 'A transação foi criada com sucesso.'})
   @ApiResponse({ status: 403, description: 'Acesso negado. Requer papel de ADMIN.'})
   async create(@Body() createItem: CreateTransactionDto): Promise<Transaction> {
+=======
+  create(@Body() createItem: CreateTransactionDto): Transaction {
+>>>>>>> 80eb1ace50e8f84c878ea8484ab5a1f853f94c07
     return this.transactionsService.create(createItem);
   } 
 
@@ -53,6 +87,39 @@ export class TransactionsController {
     return this.transactionsService.getSummary();
   }
 
+  @Get('not-found/:id')
+  simulateNotFound(@Param('id') id: string) {
+    if (id !== '1') {
+      throw new NotFoundException('Transação não encontrada');
+    }
+    return { id, status: 'Transação encontrada' };
+  }
+
+  @Get('bad-request')
+  simulateBadRequest() {
+    throw new BadRequestException('Requisição inválida');
+  }
+
+  @Get('forbidden')
+  simulateForbidden() {
+    throw new ForbiddenException('Acesso não permitido');
+  }
+
+  @Get('http-exception')
+  simulateHttpException() {
+    throw new HttpException(
+      'Erro genérico com HttpException',
+      HttpStatus.I_AM_A_TEAPOT,
+    );
+  }
+
+  @Get('custom-error')
+  simulateCustomException() {
+    throw new CustomException(
+      'Erro lançado por uma exceção customizada',
+    );
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Busca uma transação específica pelo ID' })
   @ApiParam({ name: 'id', description: 'ID da transação a ser buscada' })
@@ -62,8 +129,8 @@ export class TransactionsController {
     return this.transactionsService.findOne(id);
   }
 
-
   @Put(':id')
+<<<<<<< HEAD
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Atualiza todos os dados de uma transação (Apenas ADMIN)' })
   @ApiParam({ name: 'id', description: 'ID da transação a ser atualizada' })
@@ -74,10 +141,17 @@ export class TransactionsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateData: UpdateTransactionDto,
   ): Promise<Transaction> {
+=======
+  update(
+    @Param('id') id: string,
+    @Body() updateData: UpdateTransactionDto,
+  ): Transaction {
+>>>>>>> 80eb1ace50e8f84c878ea8484ab5a1f853f94c07
     return this.transactionsService.update(id, updateData);
   }
 
   @Patch(':id')
+<<<<<<< HEAD
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Atualiza parcialmente uma transação (Apenas ADMIN)' })
   @ApiParam({ name: 'id', description: 'ID da transação a ser atualizada' })
@@ -88,6 +162,12 @@ export class TransactionsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() partialUpdateData: UpdateTransactionDto,
   ): Promise<Transaction> {
+=======
+  partialUpdate(
+    @Param('id') id: string,
+    @Body() partialUpdateData: UpdateTransactionDto,
+  ): Transaction {
+>>>>>>> 80eb1ace50e8f84c878ea8484ab5a1f853f94c07
     return this.transactionsService.update(id, partialUpdateData);
   }
 
