@@ -1,35 +1,33 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Transaction } from './transaction.model';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Transaction } from '@prisma/client';
 @Injectable()
 export class TransactionsService {
+  constructor(private prisma: PrismaService) {}
   private items: Transaction[] = []; // Armazena a lista de itens em memória
   private nextId = 1;
 
   // Método para criar um novo item
-  create(item: Omit<Transaction, 'id'>): Transaction {
-    const newItem = {
-      id: this.nextId.toString(),
-       ...item
-    };
-    this.items.push(newItem);
-    this.nextId++;
-    return newItem;
+  async create(data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>): Promise<Transaction> {
+    return this.prisma.transaction.create({
+      data,
+    });
   }
 
-  // Método para listar todos os itens
-  findAll(type?: 'income' | 'expense'): Transaction[] {
-    if (type) {
-      return this.items.filter((item) => item.type === type);
-    }
-    return this.items;
-  }
 
-  getSummary() {
-    const totalIncome = this.items
+  // Listar todas as transações, com filtro opcional de tipo
+  async findAll(type: string): Promise<Transaction[]> {
+    return this.prisma.transaction.findMany({});
+  } 
+  
+
+  async getSummary() {
+    const transactions = await this.prisma.transaction.findMany();
+    const totalIncome = transactions
       .filter((item) => item.type === 'income')
       .reduce((sum, item) => sum + item.amount, 0);
 
-    const totalExpense = this.items
+    const totalExpense = transactions
       .filter((item) => item.type === 'expense')
       .reduce((sum, item) => sum + item.amount, 0);
 
@@ -40,24 +38,29 @@ export class TransactionsService {
   }
 
   // Método para encontrar um item específico pelo ID
-  findOne(id: string): Transaction {
-    const item = this.items.find((item) => item.id === id);
-    if (!item) throw new NotFoundException('Transaction not found');
-    return item;
+  async findOne(id: number): Promise<Transaction> {
+    const transaction = await this.prisma.transaction.findUnique({
+      where: { id },
+    });
+    if (!transaction) throw new NotFoundException('Transaction not found');
+    return transaction;
   }
 
-  // Método para atualizar um item específico pelo ID
-  update(id: string, updateData: Partial<Transaction>): Transaction {
-    const item = this.findOne(id);
-    Object.assign(item, updateData);
-    return item;
+  // Atualizar uma transação
+  async update(id: number, updateData: Partial<Transaction>): Promise<Transaction> {
+    await this.findOne(id); // lança 404 se não existir
+    return this.prisma.transaction.update({
+      where: { id },
+      data: updateData,
+    });
   }
 
 
   // Método para remover um item específico pelo ID
-  remove(id: string) {
-    const index = this.items.findIndex((item) => item.id === id);
-    if (index === -1) throw new NotFoundException('Transaction not found');
-    this.items.splice(index, 1);
+  async remove(id: number): Promise<void> {
+    await this.findOne(id); // lança 404 se não existir
+    await this.prisma.transaction.delete({
+      where: { id },
+    });
   }
 }
