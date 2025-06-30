@@ -62,7 +62,6 @@ export class TransactionsController {
     return this.transactionsService.findOne(id);
   }
 
-
   @Put(':id')
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Atualiza todos os dados de uma transação (Apenas ADMIN)' })
