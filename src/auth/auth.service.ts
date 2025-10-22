@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';  // importe o bcrypt
-import { PrismaService } from 'src/prisma/prisma.service'; // serviço do Prisma para acessar DB
-// (Opcionalmente, importe DTOs de Login e Registro se você os criar)
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,22 +12,27 @@ export class AuthService {
   ) {}
 
   // Método de registro de novo usuário
-  async register(email: string, password: string, name?: string) {
-    // Verifica se o email já está cadastrado (unicidade)
+  async register(registerData: RegisterDto) {
+    const { email, password, name, role } = registerData;
+
+    // Verifica se o email ja esta em uso
     const existingUser = await this.prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       throw new ConflictException('Email já está em uso.');
     }
 
     // Gera hash da senha antes de salvar
-    const hashedPassword = await bcrypt.hash(password, 10);  // 10 rounds de salt (padrão)
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const userRole = role || 'USER';
 
     // Cria novo usuário no banco (usando o model User do Prisma)
     const user = await this.prisma.user.create({
       data: {
         email: email,
         password: hashedPassword,
-        name: name
+        name: name,
+        role: userRole,
       }
     });
 
@@ -54,7 +59,7 @@ export class AuthService {
     const payload = { 
       sub: user.id,
       email: user.email,
-      role: user.role };  // 'sub' é padrão JWT para subject (id do usuário)
+      role: user.role };
     const token = await this.jwtService.signAsync(payload);
 
     return {

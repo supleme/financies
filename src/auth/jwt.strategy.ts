@@ -7,9 +7,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private prisma: PrismaService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // extrai JWT do header Bearer
-      ignoreExpiration: false,  // rejeita tokens expirados automaticamente
-      secretOrKey: process.env.JWT_SECRET || 'minha_chave_secreta', // mesma chave usada no JwtModule
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: process.env.JWT_SECRET || 'minha_chave_secreta',
     });
   }
 

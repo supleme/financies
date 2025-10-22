@@ -8,15 +8,15 @@ async function bootstrap() {
 
   // Configuração do Swagger
   const config = new DocumentBuilder()
-    .setTitle('Finances API') // Título da sua API
-    .setDescription('Documentação da API do app Finances') // Descrição
+    .setTitle('Finances API')
+    .setDescription('Documentação da API do app Finances') 
     .setVersion('1.0')
-    .addBearerAuth() // Essencial para habilitar o uso de token JWT no Swagger 
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document); // Define a rota da documentação
-
+  SwaggerModule.setup('api-docs', app, document);
+  
   await app.listen(3000);
 }
 bootstrap();

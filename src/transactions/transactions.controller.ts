@@ -24,6 +24,7 @@ class UpdateTransactionDto {
 
 @ApiTags('Transactions')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}

@@ -14,8 +14,8 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'Usuário registrado com sucesso.' })
   @ApiResponse({ status: 409, description: 'O e-mail informado já está em uso (Conflict).' })
   // @HttpCode(HttpStatus.CREATED) - por padrão Post retorna 201 Created, use se quiser ser explícito
-  async register(@Body('email') email: string, @Body('password') password: string, @Body('name') name?: string) {
-    const newUser = await this.authService.register(email, password, name);
+  async register(@Body() registerDto: RegisterDto) {
+    const newUser = await this.authService.register(registerDto);
     return newUser;
   }
 
