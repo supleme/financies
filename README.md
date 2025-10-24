@@ -1,9 +1,13 @@
 # 💰 Financies — Gerenciador de Transações Financeiras
 
+Desenvolvedor: **Cesar Valentim Abreu** 
+
 O **Financies** é uma API RESTful desenvolvida com **NestJS** e **Prisma ORM**, projetada para ajudar usuários a gerenciarem suas **transações financeiras pessoais**, como **entradas** e **gastos**, de forma organizada, validada e extensível.
 A proposta principal é oferecer uma base sólida para sistemas financeiros mais complexos no futuro, focando inicialmente em **CRUD de transações**, **resumos de dados**, **tratamento de exceções**, **interceptadores de resposta** e **validação de dados**.
 
----
+Documentação Swagger: **https://financies.onrender.com/api-docs**
+
+Diagrama: **https://dbdiagram.io/d/68fc0bc1357668b7328a1525**
 
 ## 📌 Funcionalidades Implementadas
 
