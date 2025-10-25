@@ -9,6 +9,32 @@ Documentação Swagger: **https://financies.onrender.com/api-docs**
 
 Diagrama: **https://dbdiagram.io/d/68fc0bc1357668b7328a1525**
 
+## 💻 Instalação
+
+**🚀 Requisitos**
+
+- Node.js >= 18  
+- PostgreSQL >= 14  
+- npm >= 9  
+
+**⚙️ Configuração rápida**
+
+1. Clone o repositório:
+   ```bash
+   git clone [https://github.com/supleme/financies.git]
+   cd financies
+   cp .env.example .env
+   ./setup.sh
+   Acesse o navegador: **http://localhost:3000/api-docs**
+
+**🧰 Comandos úteis**
+Comandos:
+Inicia o servidor em modo desenvolvimento: **npm run start:dev**
+Abre o painel visual do banco: **npx prisma studio**
+Executa migrações: **npx prisma migrate dev --name init**
+Regenera o cliente Prisma: **npx prisma generate**
+Força atualização do banco (sem migrações): **npx prisma db push**
+
 ## 📌 Funcionalidades Implementadas
 
 ### ✅ **Gerenciamento de Transações**
